@@ -1,0 +1,124 @@
+#include <iostream>
+
+using namespace std;
+
+struct node{int x;node* nextptr;};
+
+node *root;
+node *tail;
+node *fastptr;
+node *slowptr;
+node *pointer;
+int top = 0;
+int temp = -1;
+int store;
+int element;
+int value = -1;
+int value1 = -1;
+void insert_element(int);
+void find_circular(node*);
+void find_starting();
+
+
+int main()
+{
+    while(temp!=0)
+    {
+        cout<<"Enter 1 to add an element to the list"<<endl;
+        cout<<"Enter 2 to check if the list is circular"<<endl;
+        cout<<"Enter 3 to find the starting node if the list is circular"<<endl;
+        cout<<"Enter 0 to exit"<<endl;
+        cin>>temp;
+
+        switch(temp)
+        {
+            case 1:
+            {
+                cout<<"Please enter the element to be added to the list"<<endl;
+                cin>>store;
+                insert_element(store);
+                break;
+            }
+            case 2:
+            {
+                find_circular(root);
+                break;
+            }
+            case 3:
+            {
+                find_starting();
+                break;
+            }
+        }
+    }
+}
+
+void insert_element(int element)
+{
+    pointer  = new node;
+    pointer->x = element;
+    pointer->nextptr = 0;
+
+    if(top == 0)
+    {
+        root = pointer;
+        tail = pointer;
+        tail->nextptr = root;
+    }
+    else
+    {
+        tail->nextptr = pointer;
+        tail = pointer;
+        tail->nextptr = root;
+        //to point the loop anywhere else, for Eg. to node 2, do tail->nextptr = root->nextptr,
+        //for node 3, do tail->nextptr = root->nextptr->nextptr.
+    }
+    top++;
+}
+
+void find_circular(node *root)
+{
+    slowptr = root->nextptr;
+    fastptr = root->nextptr->nextptr;
+
+    while(value!=0)
+    {
+        if(fastptr == NULL || fastptr->nextptr == NULL)
+        {
+            cout<<"This is not a circular linked list"<<endl;
+            value = 0;
+            value1 = 0;
+        }
+        else if(fastptr == slowptr)//confirm if you need the second conditon
+        //of this else if
+        {
+            cout<<"This is a circular linked list"<<endl;
+            value = 0;
+            value1 = 1;
+        }
+        else
+        {
+            slowptr = slowptr->nextptr;
+            fastptr = fastptr->nextptr->nextptr;
+        }
+    }
+
+}
+
+void find_starting()
+{
+    if(value1==1 && fastptr == slowptr)
+    {
+        slowptr = root;
+
+    while(fastptr!=slowptr)
+    {
+        fastptr = fastptr->nextptr;
+        slowptr = slowptr->nextptr;
+    }
+    cout<<"The starting node is at "<<fastptr->x<<endl;
+    //break;
+    }
+}
+
+
